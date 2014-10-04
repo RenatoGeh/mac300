@@ -1,8 +1,15 @@
-MADNESS?!
+- "Dude, we should totally use goto here."
+- "You're kidding me, right? Goto?!"
+- "Yeah, goto."
+- "Man, this is madness!"
 
-THIS.
-IS.
-MAC300!!!!!!!
+- "MADNESS?!
+
+	THIS.
+	
+		IS.
+	
+			MAC300!!!!!!!"
 
 
 Tonight we study in HELL.
