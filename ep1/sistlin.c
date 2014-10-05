@@ -116,15 +116,17 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 			return -1;
 		b[i] /= A[i][i];
 	}
-
+	for (i = 1; i < n; i++)
+		printf("%lf ", b[i])
+	printf("\n")
 	return 0;
 }
 
 int main(int argc, char* args[]) {
 	FILE* f;
 	int i, j, k, n, x, y;
-	double A[NMAX][NMAX];
-	double b[NMAX];
+	double A[NMAX][NMAX], A2[NMAX][NMAX];
+	double b[NMAX], b2[NMAX];
 	int p[NMAX];
 	time_t now, then;
 
@@ -139,11 +141,13 @@ int main(int argc, char* args[]) {
 			for(k=0;k<n;++k) {
 				fscanf(f, "%d %d", &x, &y);
 				fscanf(f, "%le", &A[x][y]);
+				A2[x][y] = A[x][y];
 			}
 
 		for(j=0;j<n;++j) {
 			fscanf(f, "%d", &x);
 			fscanf(f, "%le", &b[x]);
+			b2[x] = b[x];
 		}
 
 		puts("Solucionando o sistema: Ax=b");
@@ -160,11 +164,11 @@ int main(int argc, char* args[]) {
 
 		puts("==================\nPelo metodo orientado a coluna:");
 		time(&now);
-		SWARN(lucol(n, A, p));
+		SWARN(lucol(n, A2, p));
 		time(&then);
 		printf("Tempo de execucao do pivoteamento e decomposicao em LU: %.5e\n", difftime(now, then));
 		time(&now);
-		SWARN(sscol(n, A, p, b));
+		SWARN(sscol(n, A2, p, b2));
 		time(&then);
 		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", difftime(now, then));
 		puts("==================");
