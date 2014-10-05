@@ -1,0 +1,42 @@
+Relatório de EP1
+
+Integrantes:
+
+Renato Lui Geh - NUSP 8536030
+Ricardo Lira da Fonseca - NUSP 8536131
+
+Ao concluir as 4 funções essenciais para o exercício programa, tanto em C quanto em Fortran, utilizamos de bibliotecas especializadas
+para medir o tempo respectivo para os processos de "pivoteamento parcial e decomposição em LU" (locol ou lorow) e "solução do sistema
+linear por LUP" (sscol ou ssrow), ambos feito por dois métodos, orientado a linha (lorow e ssrow) e orientado a coluna (locol e sscol).
+
+
+A seguir o tempo respectivo médio que chegamos após vários testes:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+        |                   |                   |                   |                   |  
+ FUNÇÃO |     locol em c    |     sscol em c    |     lorow em c    |     ssrow em c    |
+        |                   |                   |                   |                   |
+ _______________________________________________________________________________________
+        |                   |                   |                   |                   |
+ TEMPO  |                   |                   |                   |                   |
+        |                   |                   |                   |                   |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        |                   |                   |                   |                   |  
+ FUNÇÃO |  locol em fortran |  sscol em fortran |  lorow em fortran |  ssrow em fortran |
+        |                   |                   |                   |                   |
+_________________________________________________________________________________________
+        |                   |                   |                   |                   |
+ TEMPO  |                   |                   |                   |                   |
+        |                   |                   |                   |                   |
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Como podemos ver, o tempo decorrido nos algoritmos orientados à linha são mais velozes do que os orientados à coluna
+quando utilizando a linguagem C, enquanto o inverso acontece em Fortran, no qual algoritmos orientados à coluna são
+mais eficientes.
+
+Com esses testes conseguimos mostrar o nível de impacto que causa o tipo de estrutura de dados que um sistema usa. Ao trabalhar
+em um sistema que tem orientação à coluna como Fortran, é preciso também orientar os algoritmos à essa especificação para maior eficiência,
+e complementarmente, entender como que é definido a estrutura de dados que você está trabalhando.
