@@ -117,8 +117,8 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 		b[i] /= A[i][i];
 	}
 	for (i = 1; i < n; i++)
-		printf("%lf ", b[i])
-	printf("\n")
+		printf("%lf ", b[i]);
+	printf("\n");
 	return 0;
 }
 
