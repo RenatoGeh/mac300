@@ -43,7 +43,7 @@ function lurow(n, lda, A, p)
                                 i_max = i
                         end if
                 end do
-                if(abs(A(i_max, k) <= EPSILON(A(i_max, k))) then
+                if(abs(A(i_max, k)) <= EPSILON(A(i_max, k))) then
                         lurow = -1
                         return
                 end if
@@ -146,11 +146,11 @@ function ssrow(n, lda, A, p, b)
                 do j=i+1, n
                         b(i) = b(i) - b(j)*A(i, j)
                 end do
-                if(A(i, i) == 0)
+                if(A(i, i) == 0) then
                         ssrow = -1
                         return
                 end if
-                b(i) /= A(i, i)
+                b(i) = b(i)/A(i, i)
         end do
 
         ssrow = 0
