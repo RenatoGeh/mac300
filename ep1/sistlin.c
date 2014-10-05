@@ -10,6 +10,38 @@
 #define SWARN(s) if((s) < 0) { puts("A e' provavelmente singular."); fclose(f); continue; } 
 
 int lucol(int n, double A[][NMAX], int p[]) {
+	int i, j, k, temp, max;
+	/*Pivoteamento só copiei, ficaria igual ao de orientado a linha*/
+	for(k=0;k<n;++k) {
+		max = k;
+		for(i=k+1;i<n;++i) 
+			if(abs(A[i][k]) > (A[max][k]))
+				max = i;
+		if(abs(A[max][k] <= EPSILON))
+			return -1;
+		if(max != k)
+			for(j=0;j<n;++j) {
+				temp = A[max][j];
+				A[max][j] = A[k][j];
+				A[k][j] = temp;
+			}
+		p[k] = max;
+	}
+	for (k = 1; k <= n; k++) {
+		/*Vai calcular os u's da coluna k*/
+		for(i = 1; i<=k; i++){
+			for(j = 1; j<i; j++)
+				A[i][k] = A[i][k] - A[i][j]*A[j][i];
+		}
+		/*Vai calcular os l's da coluna k*/
+		for(i = k+1; i <= n; i++){
+			for(j = 1; j < k; j++)
+				A[i][k] = A[i][k] - A[i][j]*A[j][k];
+			if(abs(A[k][k]) <= EPSILON)
+				return -1;
+			A[i][k] /= A[k][k];
+		}
+	}
 	return 0;
 }
 
