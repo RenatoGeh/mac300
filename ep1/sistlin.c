@@ -53,11 +53,11 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 		for(j=0;j<n;++j)
 			b[i] = b[i] - b[j]*A[i][j];
 
-	for(j=n;j>-1;--j) {
+	for(j=n-1;j>-1;--j) {
 		if(A[j][j] == 0)
 			return -1;
 		b[j] /= A[j][j];
-		for(i=0;i<j-1;++i)
+		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
 	}
 
