@@ -17,7 +17,7 @@ int lucol(int n, double A[][NMAX], int p[]) {
 		for(i=k+1;i<n;++i) 
 			if(abs(A[i][k]) > (A[max][k]))
 				max = i;
-		if(abs(A[max][k] <= EPSILON))
+		if(abs(A[max][k]) <= EPSILON)
 			return -1;
 		if(max != k)
 			for(j=0;j<n;++j) {

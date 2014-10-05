@@ -160,12 +160,128 @@ end function ssrow
 program sistlin
         implicit none
 
+        ! Functions:
         integer :: lucol
         integer :: lurow
         integer :: sscol
         integer :: ssrow
 
-        
+        ! Constants:
+        integer, parameter :: FILENAME_LENGTH = 100
+        integer, parameter :: NMAX = 100
+        integer, parameter :: prec = selected_real_kind(p=18)
 
+        ! I/O variables:
+        integer :: eof, x, y, i, j
+        character (len=FILENAME_LENGTH) :: filename
+        real :: now, after
+
+        ! Matrix, vectors and scalars:
+        integer :: n, sing
+        integer, dimension(NMAX) :: p
+        real (kind = prec), dimension (NMAX) :: b
+        real (kind = prec), dimension (NMAX, NMAX) :: A
+
+        ! Copies:
+        real (kind = prec), dimension (NMAX) :: b_copy
+        real (kind = prec), dimension (NMAX, NMAX) :: A_copy
+
+        ! Ax = b
+        ! pAx = b
+
+        eof = 0
+
+        do while(eof == 0)
+                read(*, *, IOSTAT=eof) filename
+                open(10, file=filename)
+                
+                read(10, *) n
+                
+                do i=1, n
+                        do j=1, n
+                                read(10, *) x, y
+                                read(10, *) A(y, x) ! Fortran -> Column major.
+                        end do
+                end do
+
+                do i=1, n
+                        read(10, *) x
+                        read(10, *) b(x)
+                        end do
+
+                A_copy = A
+                b_copy = b
+
+                print *, "Solucionando o sistema: Ax=b"
+                print *, "==================\nPelo metodo orientado a linha:"
+                
+                call cpu_time(now)
+                sing = lurow(n, NMAX, A_copy, p)
+                call cpu_time(after)
+
+                if(sing < 0) then
+                        print *, "A e' provavelmente singular."
+                        cycle
+                end if
+
+                write(*, 1) "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
+                
+                call cpu_time(now)
+                sing = ssrow(n, NMAX, A_copy, p, b_copy)
+                call cpu_time(after)
+
+                if(sing < 0) then
+                        print *, "A e' provavelmente singular."
+                        cycle
+                end if
+                
+                write(*, 1) "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
+
+                print *, "=================="
+
+                do i=1, n
+                        write(*, "(a, $)") "x_", i, " = "
+                        write(*, 1) b_copy(i)
+                end do
+
+                print *, "==================\nPelo metodo orientado a coluna:"
+
+                A_copy = A
+                b_copy = b
+
+                call cpu_time(now)
+                sing = lucol(n, NMAX, A_copy, p)
+                call cpu_time(after)
+
+                if(sing < 0) then 
+                        print *, "A e' provavelmente singular."
+                        cycle
+                end if
+
+                write(*, 1) "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
+                
+                call cpu_time(now)
+                sing = sscol(n, NMAX, A_copy, p, b_copy)
+                call cpu_time(after)
+
+                if(sing < 0) then
+                        print *, "A e' provavelmente singular."
+                        cycle
+                end if
+                
+                write(*, 1) "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
+
+                print *, "=================="
+
+                do i=1, n
+                        write(*, "(a, $)") "x_", i, " = "
+                        write(*, 1) b_copy(i)
+                end do
+
+                print *, "=================="
+
+                1 format(1f10.5)
+        end do 
+        
 end program sistlin
 
