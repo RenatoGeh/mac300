@@ -92,7 +92,9 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
 	}
-
+	for (i = 1; i < n; i++)
+		printf("%lf ", b[i]);
+	printf("\n");
 	return 0;
 }
 
