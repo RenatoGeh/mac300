@@ -1,5 +1,9 @@
-# C stuff:
+# Output stuff:
 
 *.exe
 *.out
 
+# Vim stuff
+
+*~
+.*.swp
