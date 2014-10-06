@@ -235,13 +235,13 @@ program sistlin
                 do i=1, n
                         do j=1, n
                                 read(10, *) x, y
-                                read(10, *) A(y, x) ! Fortran -> Column major.
+                                read(10, *) A(y+1, x+1) ! Fortran -> Column major.
                         end do
                 end do
 
                 do i=1, n
                         read(10, *) x
-                        read(10, *) b(x)
+                        read(10, *) b(x+1)
                         end do
 
                 A_copy = A

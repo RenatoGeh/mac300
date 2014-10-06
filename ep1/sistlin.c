@@ -92,8 +92,8 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
 	}
-	for (i = 1; i < n; i++)
-		printf("%lf ", b[i]);
+	for (i = 0; i < n; i++)
+		printf("x_%d = %.5e\n", i, b[i]);
 	printf("\n");
 	return 0;
 }
@@ -118,8 +118,8 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 			return -1;
 		b[i] /= A[i][i];
 	}
-	for (i = 1; i < n; i++)
-		printf("%lf ", b[i]);
+	for (i = 0; i < n; i++)
+		printf("x_%d = %.5e\n", i, b[i]);
 	printf("\n");
 	return 0;
 }
@@ -143,6 +143,7 @@ int main(int argc, char* args[]) {
 			for(k=0;k<n;++k) {
 				fscanf(f, "%d %d", &x, &y);
 				fscanf(f, "%le", &A[x][y]);
+				printf("(%d, %d) = %.5e\n", x, y, A[x][y]);
 				A2[x][y] = A[x][y];
 			}
 
