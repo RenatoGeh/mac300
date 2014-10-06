@@ -125,7 +125,7 @@ function sscol(n, lda, A, p, b)
         end do
 
         do i=1, n
-                do j=1, n
+                do j=1, i-1
                         b(i) = b(i) - b(j)*A(i, j)
                 end do
         end do
@@ -170,7 +170,7 @@ function ssrow(n, lda, A, p, b)
         end do        
 
         do i=1, n
-                do j=1, n
+                do j=1, i-1
                         b(i) = b(i) - b(j)*A(i, j)
                 end do
         end do

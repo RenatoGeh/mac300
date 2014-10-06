@@ -77,7 +77,7 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 	}
 
 	for(i=0;i<n;++i)
-		for(j=0;j<n;++j)
+		for(j=0;j<i-1;++j)
 			b[i] = b[i] - b[j]*A[i][j];
 
 	for(j=n-1;j>-1;--j) {
@@ -87,9 +87,6 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
 	}
-	for (i = 0; i < n; i++)
-		printf("x_%d = %.5e\n", i, b[i]);
-	printf("\n");
 	return 0;
 }
 
@@ -103,7 +100,7 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 	}
 
 	for(i=0;i<n;++i)
-		for(j=0;j<n;++j)
+		for(j=0;j<i-1;++j)
 			b[i] = b[i] - b[j]*A[i][j];
 
 	for(i=n-1;i>-1;--i) {
@@ -113,9 +110,6 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 			return -1;
 		b[i] /= A[i][i];
 	}
-	for (i = 0; i < n; i++)
-		printf("x_%d = %.5e\n", i, b[i]);
-	printf("\n");
 	return 0;
 }
 
@@ -157,7 +151,12 @@ int main(int argc, char* args[]) {
 		time(&now);
 		SWARN(ssrow(n, A, p, b));
 		time(&then);
+
 		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", abs(difftime(now, then)));
+
+		for (i = 0; i < n; i++)
+			printf("x_%d = %.5e\n", i, b[i]);
+		printf("\n");
 
 		puts("==================\nPelo metodo orientado a coluna:");
 		time(&now);
@@ -168,6 +167,11 @@ int main(int argc, char* args[]) {
 		SWARN(sscol(n, A2, p, b2));
 		time(&then);
 		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", abs(difftime(now, then)));
+
+		for (i = 0; i < n; i++)
+			printf("x_%d = %.5e\n", i, b2[i]);
+		printf("\n");
+
 		puts("==================");
 
 		fclose(f);
