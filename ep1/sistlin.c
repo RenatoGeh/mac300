@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include 
 
 #define abs(n) ((n)<0?-(n):(n))
 
@@ -12,7 +11,6 @@
 
 int lucol(int n, double A[][NMAX], int p[]) {
 	int i, j, k, temp, max;
-	/*Pivoteamento só copiei, ficaria igual ao de orientado a linha*/
 	for(k=0;k<n;++k) {
 		max = k;
 		for(i=k+1;i<n;++i) 
@@ -27,19 +25,15 @@ int lucol(int n, double A[][NMAX], int p[]) {
 		p[k] = max;
 	}
 	for (k = 0; k < n; k++) {
-		/*Vai calcular os u's da coluna k*/
 		for(i = 0; i<=k; i++){
 			for(j = 0; j<i; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][i];
 		}
-		/*Vai calcular os l's da coluna k*/
 		for(i = k+1; i < n; i++){
 			for(j = 0; j < k; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][k];
-			if(abs(A[k][k]) <= EPSILON){
-				printf("LUCOL\n");
+			if(abs(A[k][k]) <= EPSILON)
 				return -1;
-			}
 			A[i][k] /= A[k][k];
 		}
 	}
@@ -63,7 +57,7 @@ int lurow(int n, double A[][NMAX], int p[]) {
 		p[k] = max;
 		for(i=k+1;i<n;++i) {
 			if(abs(A[k][k]) <= EPSILON)
-				return -1
+				return -1;
 			A[i][k] /= A[k][k];
 			for(j=k+1;j<n;++j)
 				A[i][j] = A[i][j] - A[i][k]*A[k][j];
@@ -87,10 +81,8 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 			b[i] = b[i] - b[j]*A[i][j];
 
 	for(j=n-1;j>-1;--j) {
-		if(A[j][j] == 0) {
-			printf("SSCOL\n");
+		if(A[j][j] == 0)
 			return -1;
-		}
 		b[j] /= A[j][j];
 		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
@@ -117,10 +109,8 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 	for(i=n-1;i>-1;--i) {
 		for(j=i+1;j<n;++j)
 			b[i] = b[i] - b[j]*A[i][j];
-		if(A[i][i] == 0) {
-			printf("SSROW\n");
+		if(A[i][i] == 0)
 			return -1;
-		}
 		b[i] /= A[i][i];
 	}
 	for (i = 0; i < n; i++)
@@ -139,7 +129,7 @@ int main(int argc, char* args[]) {
 
 	/* Ax=b */
 
-	for(i=1;i<=argc;++i) {
+	for(i=1;i<argc;++i) {
 		f = fopen(args[i], "r");
 
 		fscanf(f, "%d", &n);
@@ -148,7 +138,6 @@ int main(int argc, char* args[]) {
 			for(k=0;k<n;++k) {
 				fscanf(f, "%d %d", &x, &y);
 				fscanf(f, "%le", &A[x][y]);
-				printf("(%d, %d) = %.5e\n", x, y, A[x][y]);
 				A2[x][y] = A[x][y];
 			}
 
@@ -164,21 +153,21 @@ int main(int argc, char* args[]) {
 		time(&now);
 		SWARN(lurow(n, A, p));
 		time(&then);
-		printf("Tempo de execucao do pivoteamento e decomposicao em LU: %.5e\n", difftime(now, then));
+		printf("Tempo de execucao do pivoteamento e decomposicao em LU: %.5e\n", abs(difftime(now, then)));
 		time(&now);
 		SWARN(ssrow(n, A, p, b));
 		time(&then);
-		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", difftime(now, then));
+		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", abs(difftime(now, then)));
 
 		puts("==================\nPelo metodo orientado a coluna:");
 		time(&now);
 		SWARN(lucol(n, A2, p));
 		time(&then);
-		printf("Tempo de execucao do pivoteamento e decomposicao em LU: %.5e\n", difftime(now, then));
+		printf("Tempo de execucao do pivoteamento e decomposicao em LU: %.5e\n", abs(difftime(now, then)));
 		time(&now);
 		SWARN(sscol(n, A2, p, b2));
 		time(&then);
-		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", difftime(now, then));
+		printf("Tempo de execucao para solucao do sistema por LUP: %.5e\n", abs(difftime(now, then)));
 		puts("==================");
 
 		fclose(f);
