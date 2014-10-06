@@ -27,15 +27,15 @@ int lucol(int n, double A[][NMAX], int p[]) {
 			}
 		p[k] = max;
 	}
-	for (k = 1; k <= n; k++) {
+	for (k = 0; k < n; k++) {
 		/*Vai calcular os u's da coluna k*/
-		for(i = 1; i<=k; i++){
-			for(j = 1; j<i; j++)
+		for(i = 0; i<=k; i++){
+			for(j = 0; j<i; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][i];
 		}
 		/*Vai calcular os l's da coluna k*/
-		for(i = k+1; i <= n; i++){
-			for(j = 1; j < k; j++)
+		for(i = k+1; i < n; i++){
+			for(j = 0; j <= k; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][k];
 			if(abs(A[k][k]) <= EPSILON)
 				return -1;

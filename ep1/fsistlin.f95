@@ -11,12 +11,47 @@ function lucol(n, lda, A, p)
         real (kind = selected_real_kind(p=18)), dimension(lda, n) :: A
 
         !Local scalars:
-        integer :: i, j, k
+        integer :: i, j, k, temp, i_max
+        
+        do k=1, n
+                i_max = k
+                do i=k+1, n
+                        if(abs(A(i, k)) > A(i_max, k)) then
+                                i_max = i     
+                        end if
+                end do
+                if(abs(A(i_max, k)) <= EPSILON(A(i_max, k))) then
+                        lucol = -1
+                        return
+                end if  
+                if(i_max /= k) then
+                        do j=1, n
+                                temp = A(i_max, j)
+                                A(i_max, j) = A(k, j)
+                                A(k, j) = temp
+                        end do
+                end if
+                p(k) = i_max
+        end do
 
+        do k=1, n
+                do i=1, k
+                        do j=1, i
+                                A(i, k) = A(i, k) - A(i, j)*A(j, i)
+                        end do
+                end do
+                do i=k+1, n
+                        do j=1, k
+                                A(i, k) = A(i, k) - A(i, j)*A(j, k)
+                        end do
+                        if(abs(A(k, k)) <= EPSILON(A(k, k))) then
+                                lucol = -1
+                                return
+                        end if
+                        A(i, k) = A(i, k)/A(k, k)
+                end do
+        end do
         
-        
-        
-
         lucol = 0
         return
 end function lucol
