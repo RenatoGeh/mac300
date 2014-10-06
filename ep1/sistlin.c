@@ -35,8 +35,10 @@ int lucol(int n, double A[][NMAX], int p[]) {
 		for(i = k+1; i < n; i++){
 			for(j = 0; j < k; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][k];
-			if(abs(A[k][k]) <= EPSILON)
+			if(abs(A[k][k]) <= EPSILON){
+				printf("LUCOL\n");
 				return -1;
+			}
 			A[i][k] /= A[k][k];
 		}
 	}
@@ -59,6 +61,10 @@ int lurow(int n, double A[][NMAX], int p[]) {
 			}
 		p[k] = max;
 		for(i=k+1;i<n;++i) {
+			if(abs(A[k][k]) <= EPSILON){
+				printf("LUROW\n");
+				return -1;
+			}
 			A[i][k] /= A[k][k];
 			for(j=k+1;j<n;++j)
 				A[i][j] = A[i][j] - A[i][k]*A[k][j];
@@ -82,8 +88,10 @@ int sscol(int n, double A[][NMAX], int p[], double b[]) {
 			b[i] = b[i] - b[j]*A[i][j];
 
 	for(j=n-1;j>-1;--j) {
-		if(A[j][j] == 0)
+		if(A[j][j] == 0) {
+			printf("SSCOL\n");
 			return -1;
+		}
 		b[j] /= A[j][j];
 		for(i=0;i<j;++i)
 			b[i] = b[i] - b[j]*A[i][j];
@@ -110,8 +118,10 @@ int ssrow(int n, double A[][NMAX], int p[], double b[]) {
 	for(i=n-1;i>-1;--i) {
 		for(j=i+1;j<n;++j)
 			b[i] = b[i] - b[j]*A[i][j];
-		if(A[i][i] == 0)
+		if(A[i][i] == 0) {
+			printf("SSROW\n");
 			return -1;
+		}
 		b[i] /= A[i][i];
 	}
 	for (i = 0; i < n; i++)
