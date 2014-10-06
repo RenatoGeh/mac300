@@ -1,6 +1,7 @@
 function lucol(n, lda, A, p)
         implicit none
         integer :: lucol
+        integer, parameter :: E = 0.0000000001
 
         ! Scalar arguments:
         integer :: n
@@ -19,11 +20,7 @@ function lucol(n, lda, A, p)
                         if(abs(A(i, k)) > A(i_max, k)) then
                                 i_max = i     
                         end if
-                end do
-                if(abs(A(i_max, k)) <= EPSILON(A(i_max, k))) then
-                        lucol = -1
-                        return
-                end if  
+                end do 
                 if(i_max /= k) then
                         do j=1, n
                                 temp = A(i_max, j)
@@ -44,7 +41,7 @@ function lucol(n, lda, A, p)
                         do j=1, k
                                 A(i, k) = A(i, k) - A(i, j)*A(j, k)
                         end do
-                        if(abs(A(k, k)) <= EPSILON(A(k, k))) then
+                        if(abs(A(k, k)) <= E) then
                                 lucol = -1
                                 return
                         end if
@@ -59,6 +56,7 @@ end function lucol
 function lurow(n, lda, A, p)
         implicit none
         integer :: lurow
+        integer, parameter :: E = 0.0000000001
 
         !Scalar arguments:
         integer :: n
@@ -78,10 +76,6 @@ function lurow(n, lda, A, p)
                                 i_max = i
                         end if
                 end do
-                if(abs(A(i_max, k)) <= EPSILON(A(i_max, k))) then
-                        lurow = -1
-                        return
-                end if
                 if(i_max /= k) then
                         do j=1, n
                                 temp = A(i_max, j)
@@ -91,6 +85,10 @@ function lurow(n, lda, A, p)
                 end if
                 p(k) = i_max
                 do i=k+1, n
+                        if(abs(A(k, k)) <= E) then
+                                lurow = -1
+                                return
+                        end if
                         A(i, k) = A(i, k)/A(k, k)
                         do j=k+1, n
                                 A(i, j) = A(i, j) - A(i, k)*A(k, j)
@@ -203,7 +201,7 @@ program sistlin
 
         ! Constants:
         integer, parameter :: FILENAME_LENGTH = 100
-        integer, parameter :: NMAX = 100
+        integer, parameter :: NMAX = 700
         integer, parameter :: prec = selected_real_kind(p=18)
 
         ! I/O variables:
@@ -216,6 +214,7 @@ program sistlin
         integer, dimension(NMAX) :: p
         real (kind = prec), dimension (NMAX) :: b
         real (kind = prec), dimension (NMAX, NMAX) :: A
+        real :: temp
 
         ! Copies:
         real (kind = prec), dimension (NMAX) :: b_copy
@@ -234,21 +233,22 @@ program sistlin
                 
                 do i=1, n
                         do j=1, n
-                                read(10, *) x, y
-                                read(10, *) A(y+1, x+1) ! Fortran -> Column major.
+                                read(10, *) x, y, temp
+                                A(y+1, x+1) = temp ! Fortran -> Column major
                         end do
                 end do
 
                 do i=1, n
-                        read(10, *) x
-                        read(10, *) b(x+1)
-                        end do
+                        read(10, *) x, temp
+                        b(x+1) = temp
+                end do
 
                 A_copy = A
                 b_copy = b
 
                 print *, "Solucionando o sistema: Ax=b"
-                print *, "==================\nPelo metodo orientado a linha:"
+                print *, "=================="
+                print *, "Pelo metodo orientado a linha:"
                 
                 call cpu_time(now)
                 sing = lurow(n, NMAX, A_copy, p)
@@ -258,8 +258,8 @@ program sistlin
                         print *, "A e' provavelmente singular."
                         cycle
                 end if
-
-                write(*, 1) "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
+ 
+                print *, "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
                 
                 call cpu_time(now)
                 sing = ssrow(n, NMAX, A_copy, p, b_copy)
@@ -270,7 +270,7 @@ program sistlin
                         cycle
                 end if
                 
-                write(*, 1) "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
+                print *, "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
 
                 print *, "=================="
 
@@ -279,7 +279,8 @@ program sistlin
                         write(*, 1) b_copy(i)
                 end do
 
-                print *, "==================\nPelo metodo orientado a coluna:"
+                print *, "=================="
+                print *, "Pelo metodo orientado a coluna:"
 
                 A_copy = A
                 b_copy = b
@@ -293,7 +294,7 @@ program sistlin
                         cycle
                 end if
 
-                write(*, 1) "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
+                print *, "Tempo de execucao do pivoteamento e decomposicao em LU: ", (after-now)
                 
                 call cpu_time(now)
                 sing = sscol(n, NMAX, A_copy, p, b_copy)
@@ -304,16 +305,17 @@ program sistlin
                         cycle
                 end if
                 
-                write(*, 1) "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
+                print *, "Tempo de execucao para solucao do sistema por LUP: ", (after-now)
 
                 print *, "=================="
 
                 do i=1, n
-                        write(*, "(a, $)") "x_", i, " = "
-                        write(*, 1) b_copy(i)
+                        print *, "x_", i, " = ", b_copy(i)
                 end do
 
                 print *, "=================="
+
+                close(10)
 
                 1 format(1f10.5)
         end do 

@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include 
 
 #define abs(n) ((n)<0?-(n):(n))
 
-#define NMAX 100
-#define EPSILON 0.0001
+#define NMAX 700
+#define EPSILON 0.00000001
 
 #define SWARN(s) if((s) < 0) { puts("A e' provavelmente singular."); fclose(f); continue; } 
 
@@ -61,10 +62,8 @@ int lurow(int n, double A[][NMAX], int p[]) {
 			}
 		p[k] = max;
 		for(i=k+1;i<n;++i) {
-			if(abs(A[k][k]) <= EPSILON){
-				printf("LUROW\n");
-				return -1;
-			}
+			if(abs(A[k][k]) <= EPSILON)
+				return -1
 			A[i][k] /= A[k][k];
 			for(j=k+1;j<n;++j)
 				A[i][j] = A[i][j] - A[i][k]*A[k][j];
