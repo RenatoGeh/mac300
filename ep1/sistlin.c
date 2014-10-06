@@ -35,7 +35,7 @@ int lucol(int n, double A[][NMAX], int p[]) {
 		}
 		/*Vai calcular os l's da coluna k*/
 		for(i = k+1; i < n; i++){
-			for(j = 0; j <= k; j++)
+			for(j = 0; j < k; j++)
 				A[i][k] = A[i][k] - A[i][j]*A[j][k];
 			if(abs(A[k][k]) <= EPSILON)
 				return -1;
